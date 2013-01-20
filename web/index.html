@@ -38,7 +38,7 @@ TempSensor.prototype = {
         this.t = t;
         this.e.value.text(this.t).append("&deg;C");
         this.dataTable.addRow([new Date(), t]);
-        this.chart.draw(this.dataTable, {width: 500, height: 400, vAxis: {minValue: 0}});
+        this.chart.draw(this.dataTable, {curveType: "function", width: 500, height: 400, vAxis: {minValue: 0}});
     }
 };
 
