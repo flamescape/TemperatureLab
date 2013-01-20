@@ -15,12 +15,7 @@ var app = express();
 var httpServer = http.createServer(app);
 var sockServer = sio.listen(httpServer);
 
-app.use("/update/", function(req, res, next){
-    console.log("Temperature requested");
-    res.setHeader('Content-type','application/json');
-    res.end(JSON.stringify(lastReading));
-});
-app.use(express.static(__dirname + '/docs'));
+app.use(express.static(__dirname + '/web'));
 
 sockServer.on('connection', function(client) {
     var repeat = setInterval(function(){
