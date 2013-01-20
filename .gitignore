@@ -1,0 +1,9 @@
+node_modules/socket.io/*
+node_modules/express/*
+
+############
+## Windows
+############
+
+Thumbs.db
+Desktop.ini

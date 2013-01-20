@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<style>
+body, h1, h2, h3 {
+    font-family: "Courier New";
+}
+.sensor {
+    border: 1px dashed red;
+    margin: 10px;
+    padding: 10px;
+}
+</style>
+
+<script src="jquery.js"></script>
+<script src="socket.js"></script>
+<script src="graph.js"></script>
+<script>
+
+
+var TempSensor = function(id, sensorContainer){
+    this.id = id;
+    this.t = null;
+    this.e = {};
+    this.e.container = $("<div class='sensor'/>").appendTo($("#"+sensorContainer));
+    this.e.id = $("<h2/>").appendTo(this.e.container).text(id);
+    this.e.value = $("<h2/>").appendTo(this.e.container);
+    this.e.graph = $("<div/>").appendTo(this.e.container);
+    // graph setup
+    this.dataTable = new google.visualization.DataTable();
+    this.dataTable.addColumn('date', 'Time');
+    this.dataTable.addColumn('number', 'Temperature (C)');
+    this.chart = new google.visualization.LineChart(this.e.graph.get(0));
+}
+TempSensor.prototype = {
+    update: function(t) {
+        this.t = t;
+        this.e.value.text(this.t).append("&deg;C");
+        this.dataTable.addRow([new Date(), t]);
+        this.chart.draw(this.dataTable, {width: 500, height: 400, vAxis: {minValue: 0}});
+    }
+};
+
+
+var TempLab = function(sensorContainer){
+    var self = this;
+    this.sensorContainer = sensorContainer;
+    this.sensors = {};
+    this.io = io.connect('ws://'+window.location.host);
+    this.io.on('update', function(readings){
+        if (!!readings) {
+            readings.forEach(function(r){
+                self.getSensor(r.id).update(r.t)
+            });
+        }
+    });
+}
+TempLab.prototype = {
+    getSensor: function(id){
+        if (!!this.sensors[id])
+            return this.sensors[id];
+        
+        this.sensors[id] = new TempSensor(id, this.sensorContainer);
+        return this.sensors[id];
+    }
+};
+
+google.load('visualization', '1.0', {'packages':['corechart']});
+google.setOnLoadCallback(function(){
+    var tl = new TempLab("sensors");
+});
+</script>
+
+</head>
+<body>
+
+<h1>Temperature laboratory</h1>
+
+<div id="sensors"></div>
+
+</body>
+</html>
