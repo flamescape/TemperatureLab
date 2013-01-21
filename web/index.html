@@ -5,13 +5,45 @@
 <title>Temperature Lab</title>
 
 <style>
+@font-face {
+    font-family: "Flamescape 7";
+    font-weight: bold;
+    font-style: normal;
+    src: url(style/Flamescape_7-Segment_Bold.ttf);
+}
+@font-face {
+    font-family: "Flamescape 7";
+    font-weight: bold;
+    font-style: italic;
+    src: url(style/Flamescape_7-Segment_BoldItalic.ttf);
+}
+
 body, h1, h2, h3 {
-    font-family: "Courier New";
+    font-family: monospace;
 }
 .sensor {
     border: 1px dashed red;
     margin: 10px;
     padding: 10px;
+}
+.seven-seg {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: block;
+    color: red;
+}
+.seven-seg-container {
+    position: relative;
+    background: #333;
+    color: black;
+    text-align: right;
+    width: 300px;
+    font: bold 3em "Flamescape 7", monospace;
+    text-align: right;
+}
+.seven-seg-container:before {
+    content: attr(data-backplane);
 }
 </style>
 
@@ -27,7 +59,7 @@ var TempSensor = function(id, sensorContainer){
     this.e = {};
     this.e.container = $("<div class='sensor'/>").appendTo($("#"+sensorContainer));
     this.e.id = $("<h2/>").appendTo(this.e.container).text(id);
-    this.e.value = $("<h2/>").appendTo(this.e.container);
+    this.e.value = $('<div class="seven-seg-container" data-backplane="88888.8888"><span class="seven-seg"/></div>').appendTo(this.e.container).find('span');
     this.e.graph = $("<div/>").appendTo(this.e.container);
     // graph setup
     this.dataTable = new google.visualization.DataTable();
@@ -38,7 +70,7 @@ var TempSensor = function(id, sensorContainer){
 TempSensor.prototype = {
     update: function(t) {
         this.t = t;
-        this.e.value.text(this.t).append("&deg;C");
+        this.e.value.text(this.t.toFixed(2)).append("&deg;C");
         this.dataTable.addRow([new Date(), t]);
         this.chart.draw(this.dataTable, {curveType: "function", width: 500, height: 400, vAxis: {minValue: 0}});
     }
