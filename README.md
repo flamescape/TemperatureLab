@@ -3,7 +3,11 @@ Temperature Lab
 
 ### Installation & Usage
 
-    npm install socket.io
-    npm install express
-    node server.js
+    $ git clone https://github.com/flamescape/TemperatureLab.git
+    $ cd TemperatureLab
+    $ npm install socket.io
+    $ npm install express
+    $ node server.js
+    
+Direct your web browser to http://localhost/
 
