@@ -17,10 +17,25 @@
     font-style: italic;
     src: url(style/Flamescape_7-Segment_BoldItalic.ttf);
 }
-
-body, h1, h2, h3 {
-    font-family: monospace;
+@font-face {
+    font-family: "Embossing Tape";
+    src: url(style/embosst1.ttf);
 }
+
+body {
+    font-size: 1em;
+}
+
+h1 {
+    font-family: "Embossing Tape", monospace;
+    background: rgb(48, 118, 151);
+    padding: 10px;
+    color: white;
+    font-size: 30pt;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.68);
+    border-radius: 3px;
+}
+
 .sensor {
     border: 1px dashed red;
     margin: 10px;
