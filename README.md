@@ -4,8 +4,8 @@
 ## ABOUT
 This is a Raspberry Pi-powered [node.js](http://nodejs.org/) application that reports the temperatures from DS18B20 temperature sensors.
 
-## PPROJECT STATUS
-So far, this doesn't do anything except display a reading from a fake temperature sensor.
+## PROJECT STATUS
+Somewhat operational: thermometer readings are displayed on a webserver. Thermometers are able to be hot-swapped while the server is running. No data is currently logged.
 
 ## INSTALLATION
 
