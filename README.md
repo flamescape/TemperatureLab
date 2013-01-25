@@ -42,8 +42,8 @@ Prerequisite: a Raspberry Pi with installed OS. We recommend the Raspberry Pi Ed
 ### Loading the kernel modules
 In order to read the raw data from the DS18B20 sensors, we need to load the One Wire kernel modules. To do that, execute the following commands:
 ```bash
-sudo modprobe w1-gpio
-sudo modprobe w1-therm
+~ $ sudo modprobe w1-gpio
+~ $ sudo modprobe w1-therm
 ```
 To check that the modules loaded properly and that your sensor is functional, execute the following command:
 ```bash
@@ -51,10 +51,10 @@ cat /sys/bus/w1/devices/28-*/w1_slave
 ```
 
 These modules must be loaded every time the RPI is booted for the temperature sensors to be read. To make things a little easier, you can load the modules at boot by editing `/etc/modules` and appending the following lines:
-`
+```
 w1-gpio
 w1-therm
-`
+```
 
 
 
