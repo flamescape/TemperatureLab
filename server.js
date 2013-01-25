@@ -26,4 +26,4 @@ sockServer.on('connection', function(client) {
     });
 });
 
-httpServer.listen(80);
+httpServer.listen(8080);

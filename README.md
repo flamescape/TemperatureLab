@@ -15,13 +15,13 @@ Prerequisite: a Raspberry Pi with installed OS. We recommend the Raspberry Pi Ed
 
 **Step 1**: Download the latest stable version of node.js
 
-```console
+```bash
 ~ $ wget http://nodejs.org/dist/v0.8.18/node-v0.8.18-linux-arm-pi.tar.gz
 ```
 
 **Step 2**: Unzip and remove superfluous files
 
-```console
+```bash
 ~ $ cd /usr/local
 /usr/local $ sudo tar xzvf ~/node-v0.8.18-linux-arm-pi.tar.gz --strip=1
 /usr/local $ sudo rm LICENSE
@@ -31,7 +31,7 @@ Prerequisite: a Raspberry Pi with installed OS. We recommend the Raspberry Pi Ed
 
 
 ### Cloning the repository and installing modules
-```console
+```bash
 /usr/local $ cd ~
 ~ $ git clone https://github.com/flamescape/TemperatureLab.git
 ~ $ cd TemperatureLab
@@ -40,7 +40,7 @@ Prerequisite: a Raspberry Pi with installed OS. We recommend the Raspberry Pi Ed
 ```
 
 ### Running the server
-```console
-~ $ sudo node server.js
+```bash
+~ $ node server.js
 ```
-Direct your web browser to http://localhost/ on the RPi or to the  RPi's local IP address from a different machine on the network to view the lab.
+Direct your web browser to http://localhost:8080 on the RPi (or to the  RPi's local IP address from a different machine on the network) to view the lab.
