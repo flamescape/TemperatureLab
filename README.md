@@ -63,4 +63,4 @@ w1-therm
 Direct your web browser to http://localhost:8080 on the RPi (or to the  RPi's local IP address from a different machine on the network) to view the lab.
 
 ## LICENSE
-TemperatureLab is released under the [Simplified BSD License.](https://github.com/flamescape/TemperatureLab/LICENSE)
+TemperatureLab is released under the [Simplified BSD License.](https://raw.github.com/flamescape/TemperatureLab/master/LICENSE)
