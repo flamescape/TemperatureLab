@@ -1,13 +1,13 @@
 # Temperature Lab
 ---------------
 
-## About
+## ABOUT
 This is a Raspberry Pi-powered [node.js](http://nodejs.org/) application that reports the temperatures from DS18B20 temperature sensors.
 
-## Project Status
+## PPROJECT STATUS
 So far, this doesn't do anything except display a reading from a fake temperature sensor.
 
-## Installation
+## INSTALLATION
 
 Prerequisite: a Raspberry Pi with installed OS. We recommend the Raspberry Pi Educational Linux Distro from Adafruit: [Occidentalis v0.2](http://learn.adafruit.com/adafruit-raspberry-pi-educational-linux-distro/occidentalis-v0-dot-2). It has built-in support for [One Wire](http://learn.adafruit.com/adafruit-raspberry-pi-educational-linux-distro/occidentalis-v0-dot-1#one-wire-support). One or more [DS18B20](https://www.adafruit.com/products/374) sensors is probably a good thing to have for this but not required to get things up and running.
 
@@ -38,7 +38,7 @@ Prerequisite: a Raspberry Pi with installed OS. We recommend the Raspberry Pi Ed
 ~ $ npm install socket.io
 ~ $ npm install express
 ```
-## Usage
+## USAGE
 ### Loading the kernel modules
 In order to read the raw data from the DS18B20 sensors, we need to load the One Wire kernel modules. To do that, execute the following commands:
 ```bash
@@ -50,17 +50,17 @@ To check that the modules loaded properly and that your sensor is functional, ex
 cat /sys/bus/w1/devices/28-*/w1_slave
 ```
 
-These modules must be loaded every time the RPI is booted for the temperature sensors to be read. To make things a little easier, you can load the modules at boot by editing `/etc/modules` and appending the following lines:
+These modules must be loaded every time the RPi is booted for the temperature sensors to be read. To make things a little easier, you can load the modules at boot by editing `/etc/modules` and appending the following lines:
 ```
 w1-gpio
 w1-therm
 ```
-
-
-
 
 ### Running the server
 ```bash
 ~ $ node server.js
 ```
 Direct your web browser to http://localhost:8080 on the RPi (or to the  RPi's local IP address from a different machine on the network) to view the lab.
+
+## LICENSE
+TemperatureLab is released under the [Simplified BSD License.](https://github.com/flamescape/TemperatureLab/LICENSE)
