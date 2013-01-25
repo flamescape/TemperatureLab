@@ -61,7 +61,7 @@ h1 {
 }
 .seven-seg-container {
     position: relative;
-    background: #333;
+    background: #222;
     color: black;
     text-align: right;
     width: 300px;
@@ -71,6 +71,9 @@ h1 {
 .seven-seg-container:before {
     content: attr(data-backplane);
 }
+.disconnected {
+    background: gray;
+}
 </style>
 
 <script src="jquery.js"></script>
@@ -79,12 +82,12 @@ h1 {
 <script>
 
 
-var TempSensor = function(id, sensorContainer){
-    this.id = id;
+var TempSensor = function(device, sensorContainer){
+    this.device = device;
     this.t = null;
     this.e = {};
     this.e.container = $("<div class='sensor'/>").appendTo($("#"+sensorContainer));
-    this.e.id = $("<h2/>").appendTo(this.e.container).text(id);
+    this.e.device = $("<h2/>").appendTo(this.e.container).text(device);
     this.e.value = $('<div class="seven-seg-container" data-backplane="88888.8888"><span class="seven-seg"/></div>').appendTo(this.e.container).find('span');
     this.e.graph = $("<div/>").appendTo(this.e.container);
     // graph setup
@@ -108,21 +111,25 @@ var TempLab = function(sensorContainer){
     this.sensorContainer = sensorContainer;
     this.sensors = {};
     this.io = io.connect('ws://'+window.location.host);
-    this.io.on('update', function(readings){
-        if (!!readings) {
-            readings.forEach(function(r){
-                self.getSensor(r.id).update(r.t)
-            });
+    this.io.on('tData', function(data){
+        if (!!data) {
+            self.getSensor(data.device).update(data.t);
         }
+    });
+    this.io.on('tDisconnect', function(data) {
+        self.getSensor(data.device).e.container.addClass('disconnected');
+    });
+    this.io.on('tConnect', function(data) {
+        self.getSensor(data.device).e.container.removeClass('disconnected');
     });
 }
 TempLab.prototype = {
-    getSensor: function(id){
-        if (!!this.sensors[id])
-            return this.sensors[id];
+    getSensor: function(device){
+        if (!!this.sensors[device])
+            return this.sensors[device];
         
-        this.sensors[id] = new TempSensor(id, this.sensorContainer);
-        return this.sensors[id];
+        this.sensors[device] = new TempSensor(device, this.sensorContainer);
+        return this.sensors[device];
     }
 };
 
