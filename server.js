@@ -6,7 +6,7 @@ var thermometers = module.require('thermometers');
 
 var app = express();
 var httpServer = http.createServer(app);
-var sockServer = io.listen(httpServer);
+var sockServer = io.listen(httpServer, {log: false});
 
 var thermoLab = new thermometers.ThermometerLab('/sys/bus/w1/devices/');
 
