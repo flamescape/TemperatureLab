@@ -2,6 +2,8 @@ node_modules/socket.io/*
 node_modules/express/*
 node_modules/sqlite3/*
 
+*.sql
+
 ############
 ## Windows
 ############

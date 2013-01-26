@@ -15,9 +15,11 @@ var thermoLab = new thermometers.ThermometerLab('/sys/bus/w1/devices/');
 app.use(express.static(__dirname + '/web'));
 
 db.serialize(function() {
-  db.run("CREATE TABLE temps (info TEXT)");
+  db.run("CREATE TABLE IF NOT EXISTS temperature_log (id TEXT)");
+  db.run("CREATE TABLE IF NOT EXISTS temperature_sensors (id INT)");
+  db.run("CREATE TABLE IF NOT EXISTS logging_sessions (id INT)");
 
-  var stmt = db.prepare("INSERT INTO lorem VALUES (?)");
+  var stmt = db.prepare("INSERT INTO temperature_log VALUES (?)");
   for (var i = 0; i < 10; i++) {
       stmt.run("Ipsum " + i);
   }
@@ -42,3 +44,4 @@ sockServer.on('connection', function(client) {
 });
 
 httpServer.listen(8080);
+
