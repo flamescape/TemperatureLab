@@ -8,7 +8,7 @@ var thermometers = module.require('thermometers');
 var app = express();
 var httpServer = http.createServer(app);
 var sockServer = io.listen(httpServer, {log: false});
-var db = new sqlite3.Database('db.sql');
+var db = new sqlite3.Database('db.sqlite');
 
 var thermoLab = new thermometers.ThermometerLab('/sys/bus/w1/devices/');
 
