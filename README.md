@@ -35,8 +35,9 @@ Prerequisite: a Raspberry Pi with installed OS. We recommend the Raspberry Pi Ed
 /usr/local $ cd ~
 ~ $ git clone https://github.com/flamescape/TemperatureLab.git
 ~ $ cd TemperatureLab
-~ $ npm install socket.io
-~ $ npm install express
+~ $ npm install [socket.io](https://github.com/LearnBoost/socket.io)
+~ $ npm install [express](https://github.com/visionmedia/express)
+~ $ npm install [sqlite3](https://github.com/developmentseed/node-sqlite3)
 ```
 ## USAGE
 ### Loading the kernel modules
