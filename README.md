@@ -5,7 +5,7 @@
 This is a Raspberry Pi-powered [node.js](http://nodejs.org/) application that reports the temperatures from DS18B20 temperature sensors.
 
 ## PROJECT STATUS
-Somewhat operational: thermometer readings are displayed on a webserver. Thermometers are able to be hot-swapped while the server is running. No data is currently logged.
+Somewhat operational: thermometer readings are displayed on a webserver. Thermometers are able to be hot-swapped while the server is running. Data is logged to a SQLite3 databse.
 
 ## INSTALLATION
 
