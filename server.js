@@ -1,33 +1,22 @@
-var http = module.require('http');
-var express = require('express');
-var io = module.require('socket.io');
-var util = module.require('util');
-var sqlite3 = require('sqlite3').verbose();
-var thermometers = module.require('thermometers');
+var config = module.require('./config'),
+    http = module.require('http'),
+    express = require('express'),
+    io = module.require('socket.io'),
+    util = module.require('util'),
+    sqlite3 = require('sqlite3').verbose(),
+    thermometers = module.require('thermometers');
 
-var app = express();
-var httpServer = http.createServer(app);
-var sockServer = io.listen(httpServer, {log: false});
-var db = new sqlite3.Database('db.sqlite');
+var app = express(),
+    httpServer = http.createServer(app),
+    sockServer = io.listen(httpServer, {log: false}),
+    db = new sqlite3.Database(config.database);
 
-var thermoLab = new thermometers.ThermometerLab('/sys/bus/w1/devices/');
+// Setup thermolab and start logging
+var thermoLab = new thermometers.ThermometerLab(config.thermometerLab.devicesPath);
+var thermoLogger = new thermometers.ThermometerLogger(thermoLab, db);
 
+// Setup web interface
 app.use(express.static(__dirname + '/web'));
-
-db.serialize(function() {
-  db.run("CREATE TABLE IF NOT EXISTS temperature_log (id TEXT)");
-  db.run("CREATE TABLE IF NOT EXISTS temperature_sensors (id INT)");
-  db.run("CREATE TABLE IF NOT EXISTS logging_sessions (id INT)");
-
-  var stmt = db.prepare("INSERT INTO temperature_log VALUES (?)");
-  for (var i = 0; i < 10; i++) {
-      stmt.run("Ipsum " + i);
-  }
-  stmt.finalize();
-});
-
-db.close();
-
 sockServer.on('connection', function(client) {
     var onNewThermometer = function(t){
         ['tConnect', 'tData', 'tFail', 'tDisconnect'].forEach(function(evt){
@@ -36,12 +25,16 @@ sockServer.on('connection', function(client) {
     };
 
     var devs = thermoLab.getDevices();
-    for (var d in devs) { onNewThermometer(devs[d]); } // Relay all currently connected thermometers.
+    for (var d in devs) {
+        onNewThermometer(devs[d]);  // Relay all currently connected thermometers.
+        thermoLogger.getSensorLog(devs[d].sensorId, 60*60, function(rows){ // Relay historical data for last hour
+            client.emit('tData', rows);
+        });
+    }
     thermoLab.on('connect', onNewThermometer); // Relay all future connected thermometers.
     client.once('disconnect', function(){ // Remove event listener when client disconnects.
         thermoLab.removeListener('connect', onNewThermometer);
     });
 });
 
-httpServer.listen(8080);
-
+httpServer.listen(config.webPort);
