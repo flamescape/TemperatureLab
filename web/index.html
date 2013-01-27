@@ -97,17 +97,16 @@ var TempSensor = function(device, sensorContainer){
     this.chart = new google.visualization.LineChart(this.e.graph.get(0));
 }
 TempSensor.prototype = {
-    update: function(data) {
+    update: function(entry) {
         var self = this;
-        data.forEach(function(entry){
-            self.dataTable.addRow([new Date(entry.time), entry.t]);
-            if (!self.lastData || entry.time > self.lastData.time) {
-                self.lastEntry = entry;
-                self.t = entry.t;
-                self.e.value.text(entry.t.toFixed(2)).append("&deg;C");
-                self.chart.draw(self.dataTable, {curveType: "function", width: 500, height: 400, vAxis: {minValue: 0}});
-            }
-        });
+        
+        self.dataTable.addRow([new Date(entry.time), entry.t]);
+        if (!self.lastData || entry.time > self.lastData.time) {
+            self.lastEntry = entry;
+            self.t = entry.t;
+            self.e.value.text(entry.t.toFixed(2)).append("&deg;C");
+            self.chart.draw(self.dataTable, {curveType: "function", width: 500, height: 400, vAxis: {minValue: 0}});
+        }
     }
 };
 
@@ -118,7 +117,9 @@ var TempLab = function(sensorContainer){
     this.sensors = {};
     this.io = io.connect('ws://'+window.location.host);
     this.io.on('tData', function(data){
-        self.getSensor(data.device).update(data);
+        data.forEach(function(entry){
+            self.getSensor(entry.device).update(entry);
+        });
     });
     this.io.on('tDisconnect', function(data) {
         self.getSensor(data.device).e.container.addClass('disconnected');
