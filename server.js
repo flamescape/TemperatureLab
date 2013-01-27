@@ -27,7 +27,7 @@ sockServer.on('connection', function(client) {
     var devs = thermoLab.getDevices();
     for (var d in devs) {
         onNewThermometer(devs[d]);  // Relay all currently connected thermometers.
-        thermoLogger.getSensorLog(devs[d].sensorId, 60*60, function(rows){ // Relay historical data for last hour
+        thermoLogger.getSensorLog(devs[d].deviceId, 60*60, function(rows){ // Relay historical data for last hour
             client.emit('tData', rows);
         });
     }
