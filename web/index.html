@@ -1,9 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-
 <title>Temperature Lab</title>
-
 <style>
 @font-face {
     font-family: "Flamescape 7";
@@ -24,8 +22,8 @@
 
 body {
     font-size: 1em;
+    font-family: Arial;
 }
-
 h1 {
     font-family: "Embossing Tape", monospace;
     background: rgb(48, 118, 151);
@@ -45,7 +43,6 @@ h1 {
     border-radius: 3px;
     font-weight: normal;
 }
-
 .sensor {
     border: 1px dashed red;
     margin: 10px;
@@ -64,8 +61,8 @@ h1 {
     background: #222;
     color: black;
     text-align: right;
-    width: 300px;
-    font: bold 3em "Flamescape 7", monospace;
+    width: 130px;
+    font: bold 1.4em "Flamescape 7", monospace;
     text-align: right;
 }
 .seven-seg-container:before {
@@ -74,46 +71,49 @@ h1 {
 .disconnected {
     background: gray;
 }
+table {
+    border-collapse: collapse;
+}
+td {
+    border: 1px solid #555;
+    font: 1em "Embossing Tape";
+}
 </style>
 
 <script src="jquery.js"></script>
 <script src="socket.js"></script>
 <script src="graph.js"></script>
 <script>
-
-
-var TempSensor = function(device, sensorContainer){
-    this.device = device;
+var TempSensor = function(deviceId, sensorContainerId){
+    this.deviceId = deviceId;
     this.t = null;
     this.e = {};
-    this.e.container = $("<div class='sensor'/>").appendTo($("#"+sensorContainer));
-    this.e.device = $("<h2/>").appendTo(this.e.container).text(device);
-    this.e.value = $('<div class="seven-seg-container" data-backplane="88888.8888"><span class="seven-seg"/></div>').appendTo(this.e.container).find('span');
-    this.e.graph = $("<div/>").appendTo(this.e.container);
-    // graph setup
-    this.dataTable = new google.visualization.DataTable();
-    this.dataTable.addColumn('date', 'Time');
-    this.dataTable.addColumn('number', 'Therm1');
-    this.chart = new google.visualization.LineChart(this.e.graph.get(0));
+    this.e.row = $("<tr class='sensor'/>").appendTo("#"+sensorContainerId+" tbody");
+    this.e.chkDisplay = $("<td><input type='checkbox' />").appendTo(this.e.row).find('input');
+    this.e.btnColour = $("<td><input type='color' />").appendTo(this.e.row).find('input');
+    this.e.serial = $("<td/>").appendTo(this.e.row).text(deviceId);
+    this.e.value = $('<td><div class="seven-seg-container" data-backplane="888.88888"><span class="seven-seg"/></div></td>').appendTo(this.e.row).find('span');
 }
 TempSensor.prototype = {
     update: function(entry) {
         var self = this;
         
-        self.dataTable.addRow([new Date(entry.time), entry.t]);
+        //self.dataTable.addRow([new Date(entry.time), entry.t]);
         if (!self.lastData || entry.time > self.lastData.time) {
             self.lastEntry = entry;
             self.t = entry.t;
-            self.e.value.text(entry.t.toFixed(2)).append("&deg;C");
-            self.chart.draw(self.dataTable, {curveType: "function", width: 500, height: 400, vAxis: {minValue: 0}});
+            self.e.value.text(entry.t.toFixed(2)).append(" &deg;C");
+            //self.chart.draw(self.dataTable, {curveType: "function", width: 500, height: 400, vAxis: {minValue: 0}});
         }
     }
 };
 
 
-var TempLab = function(sensorContainer){
+var TempLab = function(sensorContainerId, chartContainerId){
     var self = this;
-    this.sensorContainer = sensorContainer;
+    this.sensorContainerId = sensorContainerId;
+    this.chartContainerId = chartContainerId;
+    
     this.sensors = {};
     this.io = io.connect('ws://'+window.location.host);
     this.io.on('tData', function(data){
@@ -127,20 +127,26 @@ var TempLab = function(sensorContainer){
     this.io.on('tConnect', function(data) {
         self.getSensor(data.device).e.container.removeClass('disconnected');
     });
+    
+    // graph setup
+    this.dataTable = new google.visualization.DataTable();
+    this.dataTable.addColumn('date', 'Time');
+    this.dataTable.addColumn('number', 'Therm1');
+    this.chart = new google.visualization.LineChart($('#'+this.chartContainerId).get(0));
 }
 TempLab.prototype = {
-    getSensor: function(device){
-        if (!!this.sensors[device])
-            return this.sensors[device];
+    getSensor: function(deviceId){
+        if (!!this.sensors[deviceId])
+            return this.sensors[deviceId];
         
-        this.sensors[device] = new TempSensor(device, this.sensorContainer);
-        return this.sensors[device];
+        this.sensors[deviceId] = new TempSensor(deviceId, this.sensorContainerId);
+        return this.sensors[deviceId];
     }
 };
 
 google.load('visualization', '1.0', {'packages':['corechart']});
 google.setOnLoadCallback(function(){
-    var tl = new TempLab("sensors");
+    var tl = new TempLab("sensors", "chart");
 });
 </script>
 
@@ -149,7 +155,19 @@ google.setOnLoadCallback(function(){
 
 <h1>Temperature laboratory</h1>
 
-<div id="sensors"></div>
+<div id="chart"></div>
+<table id="sensors">
+    <thead>
+        <tr>
+            <th></th>
+            <th></th>
+            <th>Serial #</th>
+            <th>Last Reading</th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
 
 </body>
 </html>
