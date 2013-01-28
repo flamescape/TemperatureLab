@@ -103,7 +103,6 @@ TempSensor.prototype = {
             self.lastEntry = entry;
             self.t = entry.t;
             self.e.value.text(entry.t.toFixed(2)).append(" &deg;C");
-            //self.chart.draw(self.dataTable, {curveType: "function", width: 500, height: 400, vAxis: {minValue: 0}});
         }
     }
 };
@@ -114,12 +113,28 @@ var TempLab = function(sensorContainerId, chartContainerId){
     this.sensorContainerId = sensorContainerId;
     this.chartContainerId = chartContainerId;
     
+    // graph setup
+    this.dataTable = new google.visualization.DataTable();
+    this.dataTable.addColumn('date', 'Time');
+    this.chart = new google.visualization.LineChart($('#'+this.chartContainerId).get(0));
+    this.chartSensorCols = [];
+    
+    // sensor reading setup
     this.sensors = {};
     this.io = io.connect('ws://'+window.location.host);
     this.io.on('tData', function(data){
         data.forEach(function(entry){
-            self.getSensor(entry.device).update(entry);
+            var s = self.getSensor(entry.device);
+            var nRow = [];
+            for (var i = 0; i < self.dataTable.getNumberOfColumns(); i++) {
+                nRow[i] = null;
+            }
+            nRow[0] = new Date(entry.time);
+            nRow[self.chartSensorCols[entry.device]] = entry.t;
+            self.dataTable.addRow(nRow);
+            s.update(entry);
         });
+        self.chart.draw(self.dataTable, {curveType: "function", width: 500, height: 400, vAxis: {minValue: 0}});
     });
     this.io.on('tDisconnect', function(data) {
         self.getSensor(data.device).e.container.addClass('disconnected');
@@ -127,18 +142,13 @@ var TempLab = function(sensorContainerId, chartContainerId){
     this.io.on('tConnect', function(data) {
         self.getSensor(data.device).e.container.removeClass('disconnected');
     });
-    
-    // graph setup
-    this.dataTable = new google.visualization.DataTable();
-    this.dataTable.addColumn('date', 'Time');
-    this.dataTable.addColumn('number', 'Therm1');
-    this.chart = new google.visualization.LineChart($('#'+this.chartContainerId).get(0));
 }
 TempLab.prototype = {
     getSensor: function(deviceId){
         if (!!this.sensors[deviceId])
             return this.sensors[deviceId];
         
+        this.chartSensorCols[deviceId] = this.dataTable.addColumn('number', deviceId);
         this.sensors[deviceId] = new TempSensor(deviceId, this.sensorContainerId);
         return this.sensors[deviceId];
     }
