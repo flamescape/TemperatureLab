@@ -374,7 +374,8 @@ footer .owner p a {
 .markdown-body h4,
 .markdown-body h5,
 .markdown-body h6 {
-  font-weight: bold;
+  font-weight: normal;
+  font-family: Lora, Georgia, "Times New Roman", Times, serif;
 }
 
 .markdown-body h1 {
@@ -383,11 +384,12 @@ footer .owner p a {
 
 .markdown-body h2 {
   font-size: 24px;
-  color: #557398;
+  color: #E6EC4B;
 }
 
 .markdown-body h3 {
   font-size: 20px;
+  color: #AEAF5F;
 }
 
 .markdown-body h4 {
