@@ -1,0 +1,142 @@
+<!doctype html>
+<!-- The Time Machine GitHub pages theme was designed and developed by Jon Rohan, on Feb 7, 2012. -->
+<!-- Follow him for fun. http://twitter.com/jonrohan. Tail his code on http://github.com/jonrohan -->
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+  <link rel="stylesheet" href="stylesheets/stylesheet.css" media="screen"/>
+  <link rel="stylesheet" href="stylesheets/pygment_trac.css"/>
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+  <script type="text/javascript" src="javascripts/script.js"></script>
+
+  <title>Temperaturelab</title>
+  <meta name="description" content="">
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+</head>
+
+<body>
+
+  <div class="wrapper">
+    <header>
+      <h1 class="title">Temperaturelab</h1>
+    </header>
+    <div id="container">
+      <p class="tagline"></p>
+      <div id="main" role="main">
+        <div class="download-bar">
+        <div class="inner">
+          <a href="https://github.com/flamescape/TemperatureLab/tarball/master" class="download-button tar"><span>Download</span></a>
+          <a href="https://github.com/flamescape/TemperatureLab/zipball/master" class="download-button zip"><span>Download</span></a>
+          <a href="https://github.com/flamescape/TemperatureLab" class="code">View Temperaturelab on GitHub</a>
+        </div>
+        <span class="blc"></span><span class="trc"></span>
+        </div>
+        <article class="markdown-body">
+          <h1>Temperature Lab</h1>
+
+<hr><h2>ABOUT</h2>
+
+<p>This is a Raspberry Pi-powered <a href="http://nodejs.org/">node.js</a> application that reports the temperatures from DS18B20 temperature sensors.</p>
+
+<h2>PROJECT STATUS</h2>
+
+<p>Somewhat operational: thermometer readings are displayed on a webserver. Thermometers are able to be hot-swapped while the server is running. Data is logged to a SQLite3 databse.</p>
+
+<h2>INSTALLATION</h2>
+
+<p>Prerequisite: a Raspberry Pi with installed OS. We recommend the Raspberry Pi Educational Linux Distro from Adafruit: <a href="http://learn.adafruit.com/adafruit-raspberry-pi-educational-linux-distro/occidentalis-v0-dot-2">Occidentalis v0.2</a>. It has built-in support for <a href="http://learn.adafruit.com/adafruit-raspberry-pi-educational-linux-distro/occidentalis-v0-dot-1#one-wire-support">One Wire</a>. One or more <a href="https://www.adafruit.com/products/374">DS18B20</a> sensors is probably a good thing to have for this but not required to get things up and running.</p>
+
+<h3>Installing node.js:</h3>
+
+<p><strong>Step 1</strong>: Download the latest stable version of node.js</p>
+
+<div class="highlight"><pre>~ <span class="nv">$ </span>wget http://nodejs.org/dist/v0.8.18/node-v0.8.18-linux-arm-pi.tar.gz
+</pre></div>
+
+<p><strong>Step 2</strong>: Unzip and remove superfluous files</p>
+
+<div class="highlight"><pre>~ <span class="nv">$ </span><span class="nb">cd</span> /usr/local
+/usr/local <span class="nv">$ </span>sudo tar xzvf ~/node-v0.8.18-linux-arm-pi.tar.gz --strip<span class="o">=</span>1
+/usr/local <span class="nv">$ </span>sudo rm LICENSE
+/usr/local <span class="nv">$ </span>sudo rm README.md
+/usr/local <span class="nv">$ </span>sudo rm ChangeLog
+</pre></div>
+
+<h3>Cloning the repository and installing modules</h3>
+
+<div class="highlight"><pre>/usr/local <span class="nv">$ </span><span class="nb">cd</span> ~
+~ <span class="nv">$ </span>git clone https://github.com/flamescape/TemperatureLab.git
+~ <span class="nv">$ </span><span class="nb">cd </span>TemperatureLab
+~ <span class="nv">$ </span>npm install socket.io
+~ <span class="nv">$ </span>npm install express
+~ <span class="nv">$ </span>npm install sqlite3
+</pre></div>
+
+<h2>USAGE</h2>
+
+<h3>Loading the kernel modules</h3>
+
+<p>In order to read the raw data from the DS18B20 sensors, we need to load the One Wire kernel modules. To do that, execute the following commands:</p>
+
+<div class="highlight"><pre>~ <span class="nv">$ </span>sudo modprobe w1-gpio
+~ <span class="nv">$ </span>sudo modprobe w1-therm
+</pre></div>
+
+<p>To check that the modules loaded properly and that your sensor is functional, execute the following command:</p>
+
+<div class="highlight"><pre>cat /sys/bus/w1/devices/28-*/w1_slave
+</pre></div>
+
+<p>These modules must be loaded every time the RPi is booted for the temperature sensors to be read. To make things a little easier, you can load the modules at boot by editing <code>/etc/modules</code> and appending the following lines:</p>
+
+<pre><code>w1-gpio
+w1-therm
+</code></pre>
+
+<h3>Running the server</h3>
+
+<div class="highlight"><pre>~ <span class="nv">$ </span>node server.js
+</pre></div>
+
+<p>Direct your web browser to http://localhost:8080 on the RPi (or to the  RPi's local IP address from a different machine on the network) to view the lab.</p>
+
+<h2>LICENSE</h2>
+
+<p>TemperatureLab is released under the <a href="https://raw.github.com/flamescape/TemperatureLab/master/LICENSE">Simplified BSD License.</a></p>
+        </article>
+      </div>
+    </div>
+    <footer>
+      <div class="owner">
+      <p><a href="https://github.com/flamescape" class="avatar"><img src="https://secure.gravatar.com/avatar/708332b6715947c4a34412f1a8a14814?s=30&amp;d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png" width="48" height="48"/></a> <a href="https://github.com/flamescape">flamescape</a> maintains <a href="https://github.com/flamescape/TemperatureLab">Temperaturelab</a></p>
+
+
+      </div>
+      <div class="creds">
+        <small>This page generated using <a href="https://pages.github.com/">GitHub Pages</a><br/>theme by <a href="http://twitter.com/jonrohan/">Jon Rohan</a></small>
+      </div>
+    </footer>
+  </div>
+  <div class="current-section">
+    <a href="#top">Scroll to top</a>
+    <a href="https://github.com/flamescape/TemperatureLab/tarball/master" class="tar">tar</a><a href="https://github.com/flamescape/TemperatureLab/zipball/master" class="zip">zip</a><a href="" class="code">source code</a>
+    <p class="name"></p>
+  </div>
+
+            <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-38079992-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+</body>
+</html>
