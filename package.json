@@ -1,0 +1,30 @@
+{
+  "name": "TemperatureLab",
+  "description": "A Raspberry Pi-powered node.js application that reports the temperatures from DS18B20 temperature sensors",
+  "version": "0.1",
+  "keywords": [
+    "raspberry pi",
+    "DS18B20",
+    "One Wire"
+  ],
+  "maintainers": [
+    {
+      "name": "Flamescape",
+      "web": "http://flamescape.com"
+    },
+    {
+      "name": "John Ballantyne",
+      "web": "http://github.com/johnballantyne"
+    },
+    {
+      "name": "Mikuso",
+      "web": "http://github.com/mikuso"
+    }
+  ],
+  "licenses": [
+    {
+      "name": "Simplified BSD License",
+      "url": "https://raw.github.com/flamescape/TemperatureLab/master/LICENSE"
+    }
+  ]
+}
