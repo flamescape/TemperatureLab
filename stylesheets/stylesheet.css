@@ -53,7 +53,7 @@ body {
   font-size: 15px;
   font-family: Arial, Arial, Helvetica, sans-serif;
   line-height: 1.5;
-  background: #FFF url('../images/bg.jpg') repeat;
+  background: #000 url('../images/bg.jpg') repeat;
 }
 
 a {
@@ -74,6 +74,12 @@ h1.title {
   font-style: italic;
   font-family:Georgia, serif;
   text-align: center;
+  color: #FFF;
+  text-shadow:
+    -4px -4px 0 #000,  
+    4px -4px 0 #000,
+    -4px 4px 0 #000,
+    4px 4px 0 #000;
 }
 
 .wrapper {
